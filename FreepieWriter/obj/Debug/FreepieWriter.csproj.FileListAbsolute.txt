@@ -1,0 +1,4 @@
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\bin\Debug\FreepieWriter.dll
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\bin\Debug\FreepieWriter.pdb
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\obj\Debug\FreepieWriter.dll
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\obj\Debug\FreepieWriter.pdb

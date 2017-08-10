@@ -1,0 +1,6 @@
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\bin\Debug\openvr_api.dll
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\bin\Debug\OpenVRApiModule.dll
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\bin\Debug\OpenVRApiModule.pdb
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\obj\Debug\OpenVRApiModule.dll
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\obj\Debug\OpenVRApiModule.pdb
+D:\Development\vivetrtackerfreepiebridge\OpenVRApiModule\obj\Debug\OpenVRApiModule.csprojResolveAssemblyReference.cache

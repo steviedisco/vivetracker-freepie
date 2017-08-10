@@ -1,0 +1,5 @@
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\bin\Release\FreepieWriter.dll
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\bin\Release\FreepieWriter.pdb
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\obj\Release\FreepieWriter.dll
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\obj\Release\FreepieWriter.pdb
+D:\Development\vivetrtackerfreepiebridge\FreepieWriter\obj\Release\FreepieWriter.csprojResolveAssemblyReference.cache
