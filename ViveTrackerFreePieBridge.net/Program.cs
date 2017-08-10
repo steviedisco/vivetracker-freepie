@@ -42,23 +42,26 @@ namespace ViveTrackerFreePieBridge.net
 
                             if (!enumerate)
                             {
-                                var pos = devices["tracker_1"].get_position();
+                                var mat = devices["tracker_1"].get_position();
+                                var trans = new RigidTransform(mat);
+                                var pos = trans.pos;
+                                var rot = VectorFromQuaternion(trans.rot);
                                 var data = new FreepieWriter.FreepieWriter.FreepieData();
 
-                                data.x = (pos.m3 * -100f);
-                                data.y = -100f + (pos.m7 * 100f);
-                                data.z = pos.m11 * -100f;
+                                //data.x = (float)(pos.v0 * -100f);
+                                //data.y = (float)(-100f + (pos.v1 * 100f));
+                                //data.z = (float)(pos.v2 * -100f);
 
-                                var quat = QuaternionFromRotationMatrix(pos);
-                                var vec = VectorFromQuaternion(quat);
+                                data.x = (mat.m3 * -100f);
+                                data.y = -100f + (mat.m7 * 100f);
+                                data.z = mat.m11 * -100f;
+
+                                //var forward = new HmdVector3d_t { v0 = 0f, v1 = 0f, v2 = -1f };
+                                //var rot = mult(forward, mat);
 
                                 // data.pitch = 180f + (float)vec.v1 * rad_to_deg;
-                                data.yaw = ((float)vec.v0 * rad_to_deg) + 90f;
+                                data.yaw = 180f + (float)NormalizeAngle((rot.v0 * rad_to_deg));
                                 // data.roll = -(float)vec.v2 * rad_to_deg;
-
-                                //data.roll = 180 - rad_to_deg * (float)Math.Atan2(pos.m4, pos.m0);
-                                //data.yaw = rad_to_deg * (float)Math.Atan2(pos.m8, Math.Sqrt(Math.Pow(pos.m9, 2) + Math.Pow(pos.m10, 2)));
-                                //data.pitch = rad_to_deg * (float)Math.Atan2(pos.m9, pos.m10);
 
                                 FreepieWriter.FreepieWriter.WriteData(data, 0);
                             }
@@ -163,90 +166,6 @@ namespace ViveTrackerFreePieBridge.net
             }
         }
 
-        public static HmdQuaternion_t QuaternionFromRotationMatrix(HmdMatrix34_t matrix)
-        {
-            double num8 = (matrix.m0 + matrix.m5) + matrix.m10;
-            HmdQuaternion_t quaternion = new HmdQuaternion_t();
-            if (num8 > 0f)
-            {
-                double num = (double)Math.Sqrt((double)(num8 + 1f));
-                quaternion.w = num * 0.5f;
-                num = 0.5f / num;
-                quaternion.x = (matrix.m6 - matrix.m9) * num;
-                quaternion.y = (matrix.m8 - matrix.m2) * num;
-                quaternion.z = (matrix.m1 - matrix.m4) * num;
-                return quaternion;
-            }
-            if ((matrix.m0 >= matrix.m5) && (matrix.m0 >= matrix.m10))
-            {
-                double num7 = (double)Math.Sqrt((double)(((1f + matrix.m0) - matrix.m5) - matrix.m10));
-                double num4 = 0.5f / num7;
-                quaternion.x = 0.5f * num7;
-                quaternion.y = (matrix.m1 + matrix.m4) * num4;
-                quaternion.z = (matrix.m2 + matrix.m8) * num4;
-                quaternion.w = (matrix.m6 - matrix.m9) * num4;
-                return quaternion;
-            }
-            if (matrix.m5 > matrix.m10)
-            {
-                double num6 = (double)Math.Sqrt((double)(((1f + matrix.m5) - matrix.m0) - matrix.m10));
-                double num3 = 0.5f / num6;
-                quaternion.x = (matrix.m4 + matrix.m1) * num3;
-                quaternion.y = 0.5f * num6;
-                quaternion.z = (matrix.m9 + matrix.m6) * num3;
-                quaternion.w = (matrix.m8 - matrix.m2) * num3;
-                return quaternion;
-            }
-            double num5 = (double)Math.Sqrt((double)(((1f + matrix.m10) - matrix.m0) - matrix.m5));
-            double num2 = 0.5f / num5;
-            quaternion.x = (matrix.m8 + matrix.m2) * num2;
-            quaternion.y = (matrix.m9 + matrix.m6) * num2;
-            quaternion.z = 0.5f * num5;
-            quaternion.w = (matrix.m1 - matrix.m4) * num2;
-
-            //double num8 = (matrix.M11 + matrix.M22) + matrix.M33;
-            //HmdQuaternion_t quaternion = new HmdQuaternion_t();
-            //if (num8 > 0f)
-            //{
-            //    double num = (double)Math.Sqrt((double)(num8 + 1f));
-            //    quaternion.w = num * 0.5f;
-            //    num = 0.5f / num;
-            //    quaternion.x = (matrix.M23 - matrix.M32) * num;
-            //    quaternion.y = (matrix.M31 - matrix.M13) * num;
-            //    quaternion.z = (matrix.M12 - matrix.M21) * num;
-            //    return quaternion;
-            //}
-            //if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
-            //{
-            //    double num7 = (double)Math.Sqrt((double)(((1f + matrix.M11) - matrix.M22) - matrix.M33));
-            //    double num4 = 0.5f / num7;
-            //    quaternion.x = 0.5f * num7;
-            //    quaternion.y = (matrix.M12 + matrix.M21) * num4;
-            //    quaternion.z = (matrix.M13 + matrix.M31) * num4;
-            //    quaternion.w = (matrix.M23 - matrix.M32) * num4;
-            //    return quaternion;
-            //}
-            //if (matrix.M22 > matrix.M33)
-            //{
-            //    double num6 = (double)Math.Sqrt((double)(((1f + matrix.M22) - matrix.M11) - matrix.M33));
-            //    double num3 = 0.5f / num6;
-            //    quaternion.x = (matrix.M21 + matrix.M12) * num3;
-            //    quaternion.y = 0.5f * num6;
-            //    quaternion.z = (matrix.M32 + matrix.M23) * num3;
-            //    quaternion.w = (matrix.M31 - matrix.M13) * num3;
-            //    return quaternion;
-            //}
-            //double num5 = (double)Math.Sqrt((double)(((1f + matrix.M33) - matrix.M11) - matrix.M22));
-            //double num2 = 0.5f / num5;
-            //quaternion.x = (matrix.M31 + matrix.M13) * num2;
-            //quaternion.y = (matrix.M32 + matrix.M23) * num2;
-            //quaternion.z = 0.5f * num5;
-            //quaternion.w = (matrix.M12 - matrix.M21) * num2;
-
-            return quaternion;
-
-        }
-
         public static HmdVector3d_t VectorFromQuaternion(HmdQuaternion_t q1)
         {
             HmdVector3d_t v;
@@ -278,15 +197,22 @@ namespace ViveTrackerFreePieBridge.net
             v.v1 = (float)Math.Atan2(2f * q.x * q.w + 2f * q.y * q.z, 1 - 2f * (q.z * q.z + q.w * q.w));      // pitch
             v.v2 = (float)Math.Atan2(2f * q.x * q.y + 2f * q.z * q.w, 1 - 2f * (q.y * q.y + q.z * q.z));      // roll
 
-            return NormalizeAngles(v);
+            return v;
         }
 
-        static HmdVector3d_t NormalizeAngles(HmdVector3d_t angles)
+        public static HmdVector3d_t mult(HmdVector3d_t vec, HmdMatrix34_t mat)
         {
-            angles.v0 = NormalizeAngle(angles.v0);
-            angles.v1 = NormalizeAngle(angles.v1);
-            angles.v2 = NormalizeAngle(angles.v2);
-            return angles;
+            var x = vec.v0;
+            var y = vec.v1;
+            var z = vec.v2;
+
+            return new HmdVector3d_t
+            {
+                v0 = mat.m0 * x + mat.m1 * y + mat.m2 * z
+                //v0 = mat.m0 * x + mat.m1 * y + mat.m2 * z,
+                //v1 = mat.m4 * x + mat.m5 * y + mat.m6 * z,
+                //v2 = mat.m8 * x + mat.m9 * y + mat.m10 * z
+            };
         }
 
         static double NormalizeAngle(double angle)
